@@ -22,20 +22,26 @@ package net.sf.mzmine.modules.visualization.infovisualizer;
 import javax.annotation.Nonnull;
 
 import net.sf.mzmine.datamodel.PeakList;
+import net.sf.mzmine.datamodel.RawDataFile;
 import net.sf.mzmine.modules.MZmineModule;
 import net.sf.mzmine.parameters.ParameterSet;
 
 public class InfoVisualizerModule implements MZmineModule {
 
-    private static final String MODULE_NAME = "Peak list info window";
+    private static final String MODULE_NAME = "Info window";
 
     @Override
     public @Nonnull String getName() {
 	return MODULE_NAME;
     }
+    
+    public static void showNewRawFileInfo(RawDataFile rawFile) {
+        InfoVisualizerRawFileWindow newWindow = new InfoVisualizerRawFileWindow(rawFile);
+        newWindow.setVisible(true);
+    }
 
     public static void showNewPeakListInfo(PeakList peakList) {
-	InfoVisualizerWindow newWindow = new InfoVisualizerWindow(peakList);
+	InfoVisualizerPeakListWindow newWindow = new InfoVisualizerPeakListWindow(peakList);
 	newWindow.setVisible(true);
     }
 

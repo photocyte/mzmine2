@@ -33,6 +33,7 @@ import javax.swing.JList;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 
 import net.sf.mzmine.datamodel.PeakList;
@@ -46,7 +47,7 @@ import net.sf.mzmine.parameters.parametertypes.WindowSettingsParameter;
 
 import com.google.common.collect.Range;
 
-class InfoVisualizerWindow extends JFrame {
+class InfoVisualizerPeakListWindow extends JFrame {
 
     /**
      * 
@@ -58,7 +59,7 @@ class InfoVisualizerWindow extends JFrame {
     Range<Double> rtRange, mzRange;
     int numOfRows, numOfIdentities;
 
-    InfoVisualizerWindow(PeakList peakList) {
+    InfoVisualizerPeakListWindow(PeakList peakList) {
 
 	super("Peak list information");
 
@@ -187,6 +188,112 @@ class InfoVisualizerWindow extends JFrame {
 	    if (row.getPreferredPeakIdentity() != null)
 		numOfIdentities++;
 	}
+
+    }
+}
+
+class InfoVisualizerRawFileWindow extends JFrame {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+    private NumberFormat rtFormat = MZmineCore.getConfiguration().getRTFormat();
+    private NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
+
+    Range<Double> rtRange, mzRange;
+    int numOfRows, numOfIdentities;
+
+    InfoVisualizerRawFileWindow(RawDataFile rawFile) {
+
+        super("Raw file information");
+
+        // this.setTitle(peakList.getName() + " information");
+
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        // setBackground(Color.white);
+
+        if (rawFile.getNumOfScans() == 0) {
+            mzRange = Range.singleton(0.0);
+            rtRange = Range.singleton(0.0);
+        }
+
+        // Raw data file list
+        /*
+        JList<RawDataFile> rawDataFileList = new JList<RawDataFile>(
+                (ListModel<RawDataFile>) rawFile);
+        rawDataFileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        rawDataFileList.setLayoutOrientation(JList.VERTICAL);
+        JScrollPane rawlistScroller = new JScrollPane(rawDataFileList);
+        rawlistScroller.setPreferredSize(new Dimension(250, 60));
+        rawlistScroller.setAlignmentX(LEFT_ALIGNMENT);
+        JPanel rawPanel = new JPanel();
+        rawPanel.setLayout(new BoxLayout(rawPanel, BoxLayout.Y_AXIS));
+        JLabel label = new JLabel("List of raw data files");
+        // label.setLabelFor(rawDataFileList);
+        rawPanel.add(label);
+        rawPanel.add(rawlistScroller);
+        rawPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        */
+
+        // Applied methods list
+        /*AppliedMethodList appliedMethodList = new AppliedMethodList(
+                peakList.getAppliedMethods());
+        appliedMethodList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        appliedMethodList.setLayoutOrientation(JList.VERTICAL);
+        JScrollPane methodlistScroller = new JScrollPane(appliedMethodList);
+        methodlistScroller.setPreferredSize(new Dimension(250, 80));
+        methodlistScroller.setAlignmentX(LEFT_ALIGNMENT);*/
+
+        /*
+        JPanel methodPanel = new JPanel();
+        methodPanel.setLayout(new BoxLayout(methodPanel, BoxLayout.Y_AXIS));
+        // JLabel label = new JLabel("List of applied methods");
+        // label.setLabelFor(processInfoList);
+        methodPanel.add(new JLabel("List of applied methods"));
+        methodPanel.add(methodlistScroller);
+        methodPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));*/
+
+        // Panels
+        JPanel pnlGrid = new JPanel();
+        pnlGrid.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(5, 5, 5, 5);
+        c.gridwidth = 1;
+
+        c.gridx = 0;
+        c.gridy = 0;
+        pnlGrid.add(
+                new JLabel("<html>Name: <font color=\"blue\">"
+                        + rawFile.getName() + "</font></html>"), c);
+        c.gridx = 0;
+        c.gridy = 1;
+
+        add(pnlGrid);
+        setResizable(false);
+
+        // Add the Windows menu
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(new WindowsMenu());
+        setJMenuBar(menuBar);
+
+        pack();
+
+        // get the window settings parameter
+        ParameterSet paramSet = MZmineCore.getConfiguration()
+                .getModuleParameters(InfoVisualizerModule.class);
+        WindowSettingsParameter settings = paramSet
+                .getParameter(InfoVisualizerParameters.windowSettings);
+
+        // update the window and listen for changes
+        settings.applySettingsToWindow(this);
+        this.addComponentListener(settings);
+
+    
+    
+        
 
     }
 }

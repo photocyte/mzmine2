@@ -90,6 +90,8 @@ public class ProjectTreeMouseHandler extends MouseAdapter implements
                 "SHOW_3D");
         GUIUtils.addMenuItem(dataFilePopupMenu, "Show MS/MS visualizer", this,
                 "SHOW_IDA");
+        GUIUtils.addMenuItem(dataFilePopupMenu, "Show rawfile info", this,
+                "SHOW_RAWFILE_INFO");
         GUIUtils.addMenuItem(dataFilePopupMenu, "Sort alphabetically", this,
                 "SORT_FILES");
         GUIUtils.addMenuItem(dataFilePopupMenu, "Remove file extension", this,
@@ -167,6 +169,15 @@ public class ProjectTreeMouseHandler extends MouseAdapter implements
             if (selectedFiles.length == 0)
                 return;
             IDAVisualizerModule.showIDAVisualizerSetupDialog(selectedFiles[0]);
+
+        }
+        
+        if (command.equals("SHOW_RAWFILE_INFO")) {
+            RawDataFile[] selectedFiles = tree
+                    .getSelectedObjects(RawDataFile.class);
+            if (selectedFiles.length == 0)
+                return;
+            InfoVisualizerModule.showNewRawFileInfo(selectedFiles[0]);
 
         }
 
