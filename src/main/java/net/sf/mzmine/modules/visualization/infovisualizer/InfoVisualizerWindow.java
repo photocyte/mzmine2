@@ -24,6 +24,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -38,7 +39,9 @@ import javax.swing.ListSelectionModel;
 
 import net.sf.mzmine.datamodel.PeakList;
 import net.sf.mzmine.datamodel.PeakListRow;
+import net.sf.mzmine.datamodel.PolarityType;
 import net.sf.mzmine.datamodel.RawDataFile;
+import net.sf.mzmine.datamodel.Scan;
 import net.sf.mzmine.datamodel.impl.SimplePeakList;
 import net.sf.mzmine.desktop.impl.WindowsMenu;
 import net.sf.mzmine.main.MZmineCore;
@@ -217,6 +220,36 @@ class InfoVisualizerRawFileWindow extends JFrame {
             mzRange = Range.singleton(0.0);
             rtRange = Range.singleton(0.0);
         }
+        
+        //Calculate positive mode scan rate
+
+        
+       //Get all the scans
+        double deltaPosRT;
+        double deltaNegRT;
+        double previousRT = -1.0;
+        int[] scanNumbers = rawFile.getScanNumbers();
+        /*for (int i : scanNumbers)
+        {
+         Scan aScan = rawFile.getScan(i); 
+         if (aScan.getPolarity().getSign() == 1)
+         {
+             double retentionTime = aScan.getRetentionTime();
+             if (previousPosRT != -1.0)
+                 System.out.print("Diff:"+(retentionTime - previousRT)+" ");
+             System.out.println("POS"+retentionTime);
+             previousPosRT = retentionTime;
+            
+         }*//*
+         if (aScan.getPolarity().getSign() == -1)
+         {
+             double retentionTime = aScan.getRetentionTime();
+             System.out.println("NEG"+retentionTime);
+         }
+        }
+        */
+        
+        //Calulate negative mode scan rate
 
         // Raw data file list
         /*
@@ -270,9 +303,18 @@ class InfoVisualizerRawFileWindow extends JFrame {
                         + rawFile.getName() + "</font></html>"), c);
         c.gridx = 0;
         c.gridy = 1;
+        pnlGrid.add(
+                new JLabel("<html>Name: <font color=\"red\">"
+                        + rawFile.getName() + "</font></html>"), c);
+        
+        c.gridx = 0;
+        c.gridy = 2;
+        pnlGrid.add(
+                new JLabel("<html>Name: <font color=\"green\">"
+                        + rawFile.getName() + "</font></html>"), c);
 
         add(pnlGrid);
-        setResizable(false);
+        setResizable(true);
 
         // Add the Windows menu
         JMenuBar menuBar = new JMenuBar();
