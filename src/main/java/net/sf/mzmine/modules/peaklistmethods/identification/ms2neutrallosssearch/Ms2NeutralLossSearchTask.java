@@ -20,6 +20,7 @@
 package net.sf.mzmine.modules.peaklistmethods.identification.ms2neutrallosssearch;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -264,7 +265,6 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
         ionsA = massListA.getDataPoints();
         ionsB = massListB.getDataPoints();
         
-
         int numIonsMatched = 0;
         
         if (ionsA == null || ionsB == null || ionsA.length == 0 || ionsB.length == 0)
@@ -275,16 +275,38 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
             //ionsB = scanMS2B.getDataPointsOverIntensity(intensityThreshold);
          return null;   
         }
+        
+        //Calculate neutral losses.  The neutral losses for ion i is the
+        //mz of ion i minus the mz of all the ions whose mz is smaller than ion i
+        //e.g. the largest ion in a ion list with 10 ions will have 9 neutral losses.
+        
+        List<Double> ionsA_NL_list = new ArrayList<Double>();
+        for (int i = ionsA.length; i > 0; i--) {
+            double neutralLossMZ = ionsA[i].getMZ() - ionsA[i-1].getMZ();
+            double neutralLossRatio = ionsA[i-1].getIntensity() / ionsA[i].getIntensity();
+            Double d = neutralLossMZ;
+            ionsA_NL_list.add(d);
+        }
+        Collections.sort(ionsA_NL_list);
+        
+        List<Double> ionsB_NL_list = new ArrayList<Double>();
+        for (int i = ionsB.length; i > 0; i--) {
+            double neutralLossMZ = ionsA[i].getMZ() - ionsA[i-1].getMZ();
+            double neutralLossRatio = ionsA[i-1].getIntensity() / ionsA[i].getIntensity();
+            Double d = neutralLossMZ;
+            ionsB_NL_list.add(d);
+        }
+        Collections.sort(ionsB_NL_list);
                 
-        // Compare every ion peak in MS2 scan A, to every ion peak in MS2 scan B.
+        // Compare every neutral loss in MS2 scan A, to every neutral loss in MS2 scan B.
         double ionsBMaxMZ = ionsB[ionsB.length - 1].getMZ();
-        for (int i = 0; i < ionsA.length; i++) {
+        for (int i = ionsA_NL_list.size(); i >= 0; i++) {
             
-            double iMZ = ionsA[i].getMZ();
+            double iMZ = ionsA_NL_list.get(i).doubleValue();
             double mzRangeAbsolute = iMZ * 1e-6 * mzRangePPM;
             
             if (iMZ - mzRangeAbsolute > ionsBMaxMZ)
-                break; //Potential speedup heuristic. If any i is greater than the max of j, no more matches are possible.
+                break; //Potential speedup heuristic. If any iMZ is greater than the max of jMZ, no more matches are possible.
             
             for (int j = 0; j < ionsB.length; j++) {
                
