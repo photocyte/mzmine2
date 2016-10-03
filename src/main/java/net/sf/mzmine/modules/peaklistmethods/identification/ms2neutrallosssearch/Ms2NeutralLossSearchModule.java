@@ -35,8 +35,8 @@ import net.sf.mzmine.util.ExitCode;
 
 public class Ms2NeutralLossSearchModule implements MZmineProcessingModule {
 
-    private static final String MODULE_NAME = "MS2 similarity search";
-    private static final String MODULE_DESCRIPTION = "This method searches for similar MS2 fragmentation spectra between two peaklists";
+    private static final String MODULE_NAME = "MS2 neutral loss similarity search";
+    private static final String MODULE_DESCRIPTION = "This method searches for similar neutral losses in MS2 fragmentation spectra between two peaklists";
 
     @Override
     public @Nonnull String getName() {

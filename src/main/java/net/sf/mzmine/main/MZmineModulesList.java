@@ -45,6 +45,7 @@ import net.sf.mzmine.modules.peaklistmethods.identification.formulaprediction.Fo
 import net.sf.mzmine.modules.peaklistmethods.identification.formulapredictionpeaklist.FormulaPredictionPeakListModule;
 import net.sf.mzmine.modules.peaklistmethods.identification.fragmentsearch.FragmentSearchModule;
 import net.sf.mzmine.modules.peaklistmethods.identification.glycerophospholipidsearch.GPLipidSearchModule;
+import net.sf.mzmine.modules.peaklistmethods.identification.ms2neutrallosssearch.Ms2NeutralLossSearchModule;
 import net.sf.mzmine.modules.peaklistmethods.identification.ms2search.Ms2SearchModule;
 import net.sf.mzmine.modules.peaklistmethods.identification.nist.NistMsSearchModule;
 import net.sf.mzmine.modules.peaklistmethods.identification.onlinedbsearch.OnlineDBSearchModule;
@@ -161,7 +162,8 @@ public class MZmineModulesList {
             FragmentSearchModule.class, AdductSearchModule.class,
             ComplexSearchModule.class, OnlineDBSearchModule.class,
             GPLipidSearchModule.class, CameraSearchModule.class,
-            NistMsSearchModule.class, FormulaPredictionPeakListModule.class, Ms2SearchModule.class,
+            NistMsSearchModule.class, FormulaPredictionPeakListModule.class, 
+            Ms2SearchModule.class, Ms2NeutralLossSearchModule.class,
 
             // Visualizers
             TICVisualizerModule.class, SpectraVisualizerModule.class,
