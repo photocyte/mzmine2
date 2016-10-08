@@ -28,7 +28,7 @@ public class Ms2NeutralLossIdentity extends SimplePeakIdentity {
 
     public Ms2NeutralLossIdentity(final Feature featureA, final Feature featureB, Ms2SearchResult searchResult) {
 
-        super("MS2 similarity m/z:" + MZmineCore.getConfiguration().getMZFormat().format(featureB.getMZ()) + 
+        super("MS2 neutralLoss m/z:" + MZmineCore.getConfiguration().getMZFormat().format(featureB.getMZ()) + 
                         " RT:" + MZmineCore.getConfiguration().getRTFormat().format(featureB.getRT()) + 
                         " Score:" + String.format("%3.1e",searchResult.getScore()) +
                         " NumIonsMatched:" + searchResult.getNumIonsMatched() + 
