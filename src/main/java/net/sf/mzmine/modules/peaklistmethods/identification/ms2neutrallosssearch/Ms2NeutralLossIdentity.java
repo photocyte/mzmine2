@@ -23,10 +23,11 @@ import net.sf.mzmine.datamodel.Feature;
 import net.sf.mzmine.datamodel.PeakListRow;
 import net.sf.mzmine.datamodel.impl.SimplePeakIdentity;
 import net.sf.mzmine.main.MZmineCore;
+import net.sf.mzmine.modules.peaklistmethods.identification.ms2neutrallosssearch.Ms2NeutralLossSearchTask;
 
 public class Ms2NeutralLossIdentity extends SimplePeakIdentity {
 
-    public Ms2NeutralLossIdentity(final Feature featureA, final Feature featureB, Ms2SearchResult searchResult) {
+    public Ms2NeutralLossIdentity(final Feature featureA, final Feature featureB, Ms2NLSearchResult searchResult) {
 
         super("MS2 neutralLoss m/z:" + MZmineCore.getConfiguration().getMZFormat().format(featureB.getMZ()) + 
                         " RT:" + MZmineCore.getConfiguration().getRTFormat().format(featureB.getRT()) + 
@@ -35,6 +36,6 @@ public class Ms2NeutralLossIdentity extends SimplePeakIdentity {
                         " MatchedIons:"+searchResult.getMatchedIonsAsString());
         
         
-	setPropertyValue(PROPERTY_METHOD, "MS2 search");
+	setPropertyValue(PROPERTY_METHOD, "neutral loss search");
     }
 }

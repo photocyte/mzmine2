@@ -47,16 +47,15 @@ import net.sf.mzmine.util.SortingProperty;
 
 import com.google.common.collect.Range;
 
-class Ms2SearchResult {
+class Ms2NLSearchResult {
     private double score;
     private int numIonsMatched;
     private String searchType;
     private List<Double> matchedIons;
 
-    public Ms2SearchResult(double score, int numIonsMatched, String searchType,
+    public Ms2NLSearchResult(double score, String searchType,
             List<Double> matchedIons) {
         this.score = score;
-        this.numIonsMatched = numIonsMatched;
         this.searchType = searchType;
         this.matchedIons = matchedIons;
     }
@@ -66,7 +65,7 @@ class Ms2SearchResult {
     }
 
     public int getNumIonsMatched() {
-        return this.numIonsMatched;
+        return matchedIons.size();
     }
 
     public String getSearchType() {
@@ -158,7 +157,7 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
      */
     @Override
     public String getTaskDescription() {
-        return "MS2 similarity comparison between " + peakList1 + " and "
+        return "MS2 neutral loss comparison between " + peakList1 + " and "
                 + peakList2;
     }
 
@@ -174,7 +173,7 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
                 + "and" + peakList2 + "with mz tolerance:"
                 + mzTolerance.getPpmTolerance());
 
-        Ms2SearchResult searchResult;
+        Ms2NLSearchResult searchResult;
         PeakListRow rows1[] = peakList1.getRows();
         PeakListRow rows2[] = peakList2.getRows();
 
@@ -224,7 +223,7 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
 
     }
 
-    private Ms2SearchResult simpleMS2similarity(Feature featureA,
+    private Ms2NLSearchResult simpleMS2similarity(Feature featureA,
             Feature featureB, double intensityThreshold, MZTolerance mzRange,
             String massList) {
 
@@ -277,8 +276,6 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
         ionsA = massListA.getDataPoints();
         ionsB = massListB.getDataPoints();
 
-        int numIonsMatched = 0;
-
         if (ionsA == null || ionsB == null || ionsA.length == 0
                 || ionsB.length == 0) {
             // Fall back to profile data?
@@ -293,10 +290,14 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
         // i
         // e.g. the largest ion in a ion list with 10 ions will have 9 neutral
         // losses.
+        // The whole ion list then has 9+8+7+6+5+4+3+2+1 = 45 neutral losses
 
         List<Double> ionsA_NL_list = new ArrayList<Double>();
         for (int i = ionsA.length - 1; i > 0; i--) {
             for (int j = i - 1; j > 0; j--) {
+                if (ionsA[i].getIntensity() < intensityThreshold
+                        || ionsA[j].getIntensity() < intensityThreshold)
+                    continue;
                 double neutralLossMZ = ionsA[i].getMZ() - ionsA[j].getMZ();
                 double neutralLossRatio = ionsA[j].getIntensity()
                         / ionsA[i].getIntensity();
@@ -309,6 +310,9 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
         List<Double> ionsB_NL_list = new ArrayList<Double>();
         for (int i = ionsB.length - 1; i > 0; i--) {
             for (int j = i - 1; j >= 0; j--) {
+                if (ionsB[i].getIntensity() < intensityThreshold
+                        || ionsB[j].getIntensity() < intensityThreshold)
+                    continue;
                 double neutralLossMZ = ionsB[i].getMZ() - ionsB[j].getMZ();
                 double neutralLossRatio = ionsB[j].getIntensity()
                         / ionsB[i].getIntensity();
@@ -347,15 +351,14 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
                 if (Math.abs(iMZ - jMZ) < mzRangeAbsolute) {
                     // runningScoreTotal += ionsA[i].getIntensity()
                     // * ionsB[j].getIntensity();
-                    numIonsMatched++;
                     matchedIons.add(ionsA_NL_list.get(i));
                 }
 
             }
         }
 
-        Ms2SearchResult result = new Ms2SearchResult(runningScoreTotal,
-                numIonsMatched, "simple", matchedIons);
+        Ms2NLSearchResult result = new Ms2NLSearchResult(runningScoreTotal,
+                "simple", matchedIons);
         return result;
     }
 
@@ -366,7 +369,7 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
      * @param fragmentRow
      */
     private void addFragmentClusterIdentity(PeakListRow row1, Feature peakA,
-            Feature peakB, Ms2SearchResult searchResult) {
+            Feature peakB, Ms2NLSearchResult searchResult) {
         Ms2NeutralLossIdentity newIdentity = new Ms2NeutralLossIdentity(peakA,
                 peakB, searchResult);
         row1.addPeakIdentity(newIdentity, false);
