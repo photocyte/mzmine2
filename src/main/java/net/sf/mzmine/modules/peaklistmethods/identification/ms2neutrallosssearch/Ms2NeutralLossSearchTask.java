@@ -187,7 +187,7 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
                 Feature featureA = rows1[i].getBestPeak();
                 Feature featureB = rows2[j].getBestPeak();
 
-                searchResult = simpleMS2similarity(featureA, featureB,
+                searchResult = simpleMS2NLsimilarity(featureA, featureB,
                         intensityThreshold, mzTolerance, massListName);
 
                 // Report the final score to the peaklist identity
@@ -223,7 +223,7 @@ class Ms2NeutralLossSearchTask extends AbstractTask {
 
     }
 
-    private Ms2NLSearchResult simpleMS2similarity(Feature featureA,
+    private Ms2NLSearchResult simpleMS2NLsimilarity(Feature featureA,
             Feature featureB, double intensityThreshold, MZTolerance mzRange,
             String massList) {
 
